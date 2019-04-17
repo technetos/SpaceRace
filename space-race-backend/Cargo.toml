@@ -9,4 +9,4 @@ tide = { git = "https://github.com/rustasync/tide" }
 futures-preview = { version = "0.3.0-alpha.14", features = ["compat", "io-compat"] }
 
 [replace]
-"http-service:0.1.4" = { git = "https://github.com/fairingrey/http-service.git", branch = "update-futures" }
+"http-service:0.1.4" = { git = "https://github.com/prasannavl/http-service" }
