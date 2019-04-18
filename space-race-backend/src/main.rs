@@ -11,11 +11,13 @@ const MESH_PATH: &'static str = "../assets/meshes";
 const SCRIPT_PATH: &'static str = "../assets/scripts";
 const TEXTURE_PATH: &'static str = "../assets/textures";
 
-/// Serve the main page
+// Serve the main page
 async fn page<T>(_cx: Context<T>) -> EndpointResult {
     let bytes =
         fs::read(format!("{}/{}", INDEX_PATH, "index.html")).map_err(|_| StatusCode::NOT_FOUND)?;
 
+    
+    println!("GET {}/index.html", INDEX_PATH);
     Ok(ResponseBuilder::new()
         .header("Content-Type", "text/html")
         .status(StatusCode::OK)
@@ -24,7 +26,7 @@ async fn page<T>(_cx: Context<T>) -> EndpointResult {
         .into())
 }
 
-/// Serve script assets
+// Serve script assets
 async fn scripts<T>(cx: Context<T>) -> EndpointResult {
     let name: String = cx
         .param("name")
@@ -32,6 +34,7 @@ async fn scripts<T>(cx: Context<T>) -> EndpointResult {
 
     let bytes = fs::read(format!("{}/{}", SCRIPT_PATH, name)).map_err(|_| StatusCode::NOT_FOUND)?;
 
+    println!("GET {}/{}", SCRIPT_PATH, &name);
     Ok(ResponseBuilder::new()
         .header("Content-Type", "application/javascript")
         .status(StatusCode::OK)
@@ -40,7 +43,7 @@ async fn scripts<T>(cx: Context<T>) -> EndpointResult {
         .into())
 }
 
-/// Serve mesh assets
+// Serve mesh assets
 async fn meshes<T>(cx: Context<T>) -> EndpointResult<Vec<u8>> {
     let name: String = cx
         .param("name")
@@ -48,9 +51,11 @@ async fn meshes<T>(cx: Context<T>) -> EndpointResult<Vec<u8>> {
 
     let bytes = fs::read(format!("{}/{}", MESH_PATH, name)).map_err(|_| StatusCode::NOT_FOUND)?;
 
+    println!("GET {}/{}", MESH_PATH, &name);
     Ok(bytes)
 }
 
+// Serve texture assets
 async fn textures<T>(cx: Context<T>) -> EndpointResult<Vec<u8>> {
     let name: String = cx
         .param("name")
@@ -58,6 +63,7 @@ async fn textures<T>(cx: Context<T>) -> EndpointResult<Vec<u8>> {
 
     let bytes = fs::read(format!("{}/{}", TEXTURE_PATH, name)).map_err(|_| StatusCode::NOT_FOUND)?;
 
+    println!("GET {}/{}", TEXTURE_PATH, &name);
     Ok(bytes)
 }
 
