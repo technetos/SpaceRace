@@ -1,41 +1,7 @@
 window.addEventListener('DOMContentLoaded', function() {
-
   var canvas = document.getElementById('renderCanvas');
-
-  // load the 3D engine
-  var engine = new BABYLON.Engine(canvas, true);
-
-  var createScene = function() {
-    // Create a basic BJS Scene object
-    var scene = new BABYLON.Scene(engine);
-    // Create the camera
-    var camera = createCamera(scene);
-    camera.attachControl(canvas, true);
-    // Create a basic light, aiming 0,1,0 - meaning, to the sky.
-    var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0,1,0), scene);
-    // Create the tunnel
-    var tunnel = createTunnel(scene);
-    // Create the spaceship
-    var ship = createSpaceShip(scene);
-    // Create the background to simulate flying through space
-    var background = createBackground(scene);
-    // Create asteroids system
-    var asteroids = createAsteroids(scene);
-
-
-    // Return the created scene.
-    return scene;
-  }
-
-  var scene = createScene();
-
-  engine.runRenderLoop(function() {
-    scene.render();
-  });
-
-  window.addEventListener('resize', function() {
-    engine.resize();
-  });
+  var space_race_game = new Game(canvas);
+  space_race_game.start();
 });
 
 var createCamera = function(scene) {
@@ -47,29 +13,36 @@ var createCamera = function(scene) {
   return camera;
 }
 
-var createTunnel = function(scene) {
-  // Load the tunnel mesh
-  var tunnel = BABYLON.SceneLoader.ImportMesh("", "/meshes/", "tunnel.stl", scene, function (tunnel) {
-    // Position the tunnel mesh at the origin
-    tunnel[0].position = new BABYLON.Vector3.Zero();
-    // Create a new material
-    var material = new BABYLON.StandardMaterial("TunnelTexture", scene);
-    // Make the material transparent
-    material.alpha = 0.1;
-    // Assign the material to the tunnel
-    tunnel[0].material = material;
-
-  });
-
-  return tunnel;
-}
-
+// Create the spaceship
 var createSpaceShip = function(scene) {
-  // replace with actual ship mesh
-  var spaceship = BABYLON.MeshBuilder.CreateBox("box", { size: 1 }, scene);
-  spaceship.position = new BABYLON.Vector3(0, 0, 800);
-  setupPlayerKeyboardControls(scene, spaceship);
-  return spaceship;
+  // Create the thing babylon is capable of colliding
+  var collider = BABYLON.MeshBuilder.CreateBox("box", { size: 1 }, scene);
+  // Create a new material
+  var material = new BABYLON.StandardMaterial("ColliderTexture", scene);
+  // Make the material invisible
+  material.alpha = 0.0;
+  // Set the z coordinate to just infront of the camera
+  collider.position = new BABYLON.Vector3(0, 0, 800);
+  // Assign the invisible material to the collider
+  collider.material = material;
+  // Tie wasd keybindings to the collider
+  setupPlayerKeyboardControls(scene, collider);
+  // Import the spaceship mesh
+  var spaceship = BABYLON.SceneLoader.ImportMesh(
+    "", 
+    "/meshes/", 
+    "spaceship.stl",
+    scene,
+    function (spaceship) {
+      // Create a new material for the spaceship
+      var material = new BABYLON.StandardMaterial("ShipTexture", scene);
+      // Assign the material to the spaceship
+      spaceship[0].material = material;
+      // Make the collider the parent of the ship so the ship can collide with
+      // things
+      spaceship[0].parent = collider;
+  });
+  return collider;
 }
 
 var createBackground = function(scene) {
@@ -80,11 +53,13 @@ var createBackground = function(scene) {
   var material = new BABYLON.StandardMaterial("texture", scene);
   material.emmissiveColor = new BABYLON.Color3(100, 100, 100);
   
-  var videoTexture = new BABYLON.VideoTexture("StarsVideo", ["/textures/space_travel2.mp4"], scene, true);
-
+  var videoTexture = new BABYLON.VideoTexture(
+    "StarsVideo",
+    ["/textures/space_travel2.mp4"],
+    scene,
+    true);
   material.diffuseTexture = videoTexture;
   background.material = material;
-
 
   return background;
 }
