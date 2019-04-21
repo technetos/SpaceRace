@@ -13,10 +13,9 @@ var createCamera = function(scene) {
   return camera;
 }
 
-// Create the spaceship
 var createSpaceShip = function(scene) {
   // Create the thing babylon is capable of colliding
-  var collider = BABYLON.MeshBuilder.CreateBox("box", { size: 1 }, scene);
+  var collider = BABYLON.MeshBuilder.CreateBox("box", { height: 1, width: 2, depth: 4 }, scene);
   // Create a new material
   var material = new BABYLON.StandardMaterial("ColliderTexture", scene);
   // Make the material invisible
