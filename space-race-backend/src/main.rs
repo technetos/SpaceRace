@@ -80,7 +80,6 @@ async fn sounds<T>(cx: Context<T>) -> EndpointResult<Vec<u8>> {
     Ok(bytes)
 }
 
-
 fn main() {
     let mut app = tide::App::new(());
     app.at("/").get(page);
