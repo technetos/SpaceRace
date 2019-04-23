@@ -75,6 +75,16 @@ var setupPlayerKeyboardControls = function(scene, player) {
       var x = player.position.x;
       var y = player.position.y;
       if (checkBounds(x+1, y, 0)) {
+        var thrust = new BABYLON.Sound("explosion", "/sounds/release.wav", scene,
+          function() {
+            thrust.play();
+          },
+          {
+            loop: false,
+            autoplay: false,
+            volume: .1
+          }
+        );
         player.position.x = x+1;
       }
     }
@@ -82,6 +92,16 @@ var setupPlayerKeyboardControls = function(scene, player) {
       var x = player.position.x;
       var y = player.position.y;
       if (checkBounds(x-1, y, 0)) {
+        var thrust = new BABYLON.Sound("explosion", "/sounds/release.wav", scene,
+          function() {
+            thrust.play();
+          },
+          {
+            loop: false,
+            autoplay: false,
+            volume: .1
+          }
+        );
         player.position.x = x-1;
       }
     }
