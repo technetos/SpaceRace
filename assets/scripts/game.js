@@ -69,6 +69,18 @@ Game.prototype.createGameOverScene = function() {
 
 Game.prototype.killPlayer = function() {
   playerIsAlive = false;
+  var scene = new BABYLON.Scene(this.engine);
+  var camera = createCamera(scene);
+  var explosion = new BABYLON.Sound("explosion", "/sounds/explosion.wav", scene,
+    function() {
+      explosion.play();
+    },
+    {
+      loop: false,
+      autoplay: true,
+      volume: .5
+    }
+  );
 }
 
 Game.prototype.restartGame = function() {
