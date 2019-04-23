@@ -10,6 +10,7 @@ const INDEX_PATH: &'static str = "..";
 const MESH_PATH: &'static str = "../assets/meshes";
 const SCRIPT_PATH: &'static str = "../assets/scripts";
 const TEXTURE_PATH: &'static str = "../assets/textures";
+const SOUND_PATH: &'static str = "../assets/sounds";
 
 // Serve the main page
 async fn page<T>(_cx: Context<T>) -> EndpointResult {
@@ -67,6 +68,17 @@ async fn textures<T>(cx: Context<T>) -> EndpointResult<Vec<u8>> {
     Ok(bytes)
 }
 
+// Serve sound assets
+async fn sounds<T>(cx: Context<T>) -> EndpointResult<Vec<u8>> {
+    let name: String = cx
+        .param("name")
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    let bytes = fs::read(format!("{}/{}", SOUND_PATH, name)).map_err(|_| StatusCode::NOT_FOUND)?;
+
+    println!("GET {}/{}", SOUND_PATH, &name);
+    Ok(bytes)
+}
 
 fn main() {
     let mut app = tide::App::new(());
@@ -74,5 +86,6 @@ fn main() {
     app.at("/scripts/:name").get(scripts);
     app.at("/meshes/:name").get(meshes);
     app.at("/textures/:name").get(textures);
+    app.at("/sounds/:name").get(sounds);
     app.serve("127.0.0.1:8000").unwrap();
 }
