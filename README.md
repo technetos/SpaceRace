@@ -5,8 +5,13 @@
 ### Install rust
 ```https://rustup.rs/```
 
-### Run the backend
+### Grab the nightly toolchain
+```rustup toolchain install nightly```
 
+### Switch to the nightly toolchain
+```rustup default nightly```
+
+### Run the backend
 ```
 cd SpaceRace/space-race-backend
 cargo r
