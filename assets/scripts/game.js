@@ -8,6 +8,9 @@ function Game(canvas) {
 Game.prototype.createMainGameScene = function() {
   // Create a basic BJS Scene object
   var scene = new BABYLON.Scene(this.engine);
+  // Setup the action mananger
+  scene.actionManager = new BABYLON.ActionManager(scene);
+  // Make the background black
   scene.clearColor = new BABYLON.Color3(0, 0, 0);
   // Create the camera
   var camera = createCamera(scene);

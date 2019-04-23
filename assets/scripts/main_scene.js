@@ -1,6 +1,7 @@
 window.addEventListener('DOMContentLoaded', function() {
   var canvas = document.getElementById('renderCanvas');
   var space_race_game = new Game(canvas);
+  var booster_sound = null;
   space_race_game.start();
 });
 
@@ -11,6 +12,42 @@ var createCamera = function(scene) {
   camera.setTarget(new BABYLON.Vector3(0, 0, 0));
 
   return camera;
+}
+
+var setupBoosterSoundEffect = function(scene) {
+  var booster_sound = new BABYLON.Sound("booster", "/sounds/release.wav", scene);
+  scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction({
+    trigger: BABYLON.ActionManager.OnKeyUpTrigger,
+    parameter: 'w'
+  }, function() {
+    if(playerIsAlive === true) {
+      booster_sound.play();
+    }
+  }));
+  scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction({
+    trigger: BABYLON.ActionManager.OnKeyUpTrigger,
+    parameter: 'a'
+  }, function() {
+    if(playerIsAlive === true) {
+      booster_sound.play();
+    }
+  }));
+  scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction({
+    trigger: BABYLON.ActionManager.OnKeyUpTrigger,
+    parameter: 's'
+  }, function() {
+    if(playerIsAlive === true) {
+      booster_sound.play();
+    }
+  }));
+  scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction({
+    trigger: BABYLON.ActionManager.OnKeyUpTrigger,
+    parameter: 'd'
+  }, function() {
+    if(playerIsAlive === true) {
+      booster_sound.play();
+    }
+  }));
 }
 
 var createSpaceShip = function(scene) {
@@ -41,6 +78,9 @@ var createSpaceShip = function(scene) {
       // things
       spaceship[0].parent = collider;
   });
+
+  setupBoosterSoundEffect(scene);
+
   return collider;
 }
 
@@ -75,16 +115,6 @@ var setupPlayerKeyboardControls = function(scene, player) {
       var x = player.position.x;
       var y = player.position.y;
       if (checkBounds(x+1, y, 0)) {
-        var thrust = new BABYLON.Sound("explosion", "/sounds/release.wav", scene,
-          function() {
-            thrust.play();
-          },
-          {
-            loop: false,
-            autoplay: false,
-            volume: .1
-          }
-        );
         player.position.x = x+1;
       }
     }
@@ -92,16 +122,6 @@ var setupPlayerKeyboardControls = function(scene, player) {
       var x = player.position.x;
       var y = player.position.y;
       if (checkBounds(x-1, y, 0)) {
-        var thrust = new BABYLON.Sound("explosion", "/sounds/release.wav", scene,
-          function() {
-            thrust.play();
-          },
-          {
-            loop: false,
-            autoplay: false,
-            volume: .1
-          }
-        );
         player.position.x = x-1;
       }
     }
